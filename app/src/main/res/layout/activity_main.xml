@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textBoasVindas"
+        android:textSize="26sp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Consulta Bolsa Família \n" />
+
+    <EditText
+        android:id="@+id/codigoMunicipio"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Código do Município: (formato 0000000)" />
+
+    <EditText
+        android:id="@+id/ano"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ano: (formato 0000/Anterior ao ano corrente)" />
+
+    <Button
+        android:onClick="solicitarDado"
+        android:layout_gravity="center"
+        android:text="SOLICITAR DADOS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+        
+    <TextView
+        android:id="@+id/textResult"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+</LinearLayout>
