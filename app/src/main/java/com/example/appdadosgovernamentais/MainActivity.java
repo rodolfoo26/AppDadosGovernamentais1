@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
     TextView textResultado;
@@ -42,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         String codigoString = codigoMunicipio.getText().toString();
         String anoString = ano.getText().toString();
-        double mediaValoresPagos = 0;
-        double maiorMesPago = 0;
         String mesString = "";
-        String resultado = "";
 
         for (int i = 1; i <=12; i++) {
             if (i < 10){
@@ -55,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
             }
             String url = "http://www.transparencia.gov.br/api-de-dados/bolsa-familia-por-municipio?mesAno=" + anoString + mesString + "&codigoIbge=" + codigoString + "&pagina=1";
 
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,null,
+            int finalI = i;
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,null,
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
                                     bolsaFamilia.setTotalPago(result.getDouble("valor"));
                                     bolsaFamilias.add(bolsaFamilia);
 
+                                    if (finalI == 12){
+                                        mostrarDados();
+                                    }
                                 } catch (JSONException error){
                                     textResultado.setText(error.getMessage());
                                 }
@@ -85,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 ){
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
+                        Map<String, String> params = new HashMap<>();
                         params.put("chave-api-dados", "46694746af12d7fd0851f447c3a3211e");
+                        params.put("Accept", "*/*");
 
                         return params;
                     }
@@ -95,8 +99,15 @@ public class MainActivity extends AppCompatActivity {
             request.setRetryPolicy(new DefaultRetryPolicy( 5000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             queue.add(request);
          }
+    }
+
+    public void mostrarDados(){
+        double mediaValoresPagos = 0;
+        double maiorMesPago = 0;
+        String resultado = "";
+
         for (int i = 1; i <= bolsaFamilias.size(); ++i){
-            BolsaFamilia objeto = (BolsaFamilia) bolsaFamilias.get(i);
+            BolsaFamilia objeto = (BolsaFamilia) bolsaFamilias.get(i-1);
             if (i == 1){
                 resultado += "Municipio: "+ objeto.getNomeMunicipio() + "\n";
                 resultado += "Estado: "+ objeto.getEstado()+"\n";
